@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System - Loans Management</title>
+    <link rel="stylesheet" href="../static/css/bookManagementLibrarian.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <header>
+        <h1>Loan Management</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('book_management') }}">Manage Books</a></li>
+                <li><a href="{{ url_for('patron_management') }}">Manage Patrons</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Add Book Button -->
+    <div class="add-book-container">
+        <button class="add-book-btn">Add Loan</button>
+    </div>
+
+    <!-- Book Cards Grid -->
+    <div class="card-grid">
+        <!-- Example Card -->
+        <div class="book-card">
+            <img src="https://marketplace.canva.com/EAFaQMYuZbo/1/0/1003w/canva-brown-rusty-mystery-novel-book-cover-hG1QhA7BiBU.jpg" alt="Book Image" class="book-image">
+            <div class="overlay">
+                <h3 class="title">Book Title</h3>
+                <p class="isbn">ISBN: 1234567890</p>
+                <button class="edit-btn">Edit</button>
+                <button class="delete-btn">Delete</button>
+            </div>
+        </div>
+        <!-- Add more cards dynamically here -->
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Library Management System - Home</title>
+    <link rel="stylesheet" href="../static/css/hpPatron.css">
+    <script src="../static/js/loadUser.js"></script>
+    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/hpPatron.css') }}">
+    <script src="{{ url_for('static', filename='js/loadUser.js')}}"></script> -->
+</head>
+<body>
+    <header>
+        <div class="nav-links">
+            <ul>
+                <li><a id="books-button" href="{{ url_for('books') }}">Books</a></li>
+                <li><a id="loans-button" href="{{ url_for('loans') }}">My Loans</a></li>
+                <li><a id="logout-button" href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+        </div>
+        <h1 class="welcome-message">Welcome, [Patron Name]!</h1>
+    </header>
+
+    <main>
+        <div class="profile-info">
+            <p><strong>Name:</strong> [Patron Name]</p>
+            <p><strong>Current Loans:</strong> [Number of Current Loans]</p>
+            <p><strong>Overdue Fines:</strong> [Total Overdue Fines]</p>
+            <p><strong>Current Books Loaned:</strong> [Total Books Loned]</p>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2024 Your Library
+    </footer>
+</body>
+</html>

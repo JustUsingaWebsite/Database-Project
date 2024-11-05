@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Library Management System - Search</title>
+    <link rel="stylesheet" href="../static/css/searchPatron.css">
+    <script src="../static/js/loadBooks.js" defer></script> <!-- Using defer to ensure proper loading -->
+    <script src="../static/js/loanBooks.js" defer></script> <!-- Also using defer here -->
+    
+</head>
+<body>
+
+    <header>
+        <nav class="top-right-nav">
+            <ul>
+                <li><a id="books-button" href="{{ url_for('home') }}">Home</a></li>
+                <li><a id="loans-button" href="{{ url_for('loans') }}">My Loans</a></li>
+                <li><a id="logout-button" href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <h1>Search Books</h1>
+
+    <div class="card-grid">
+
+        <!-- <div class="book-card">
+            <img src="https://marketplace.canva.com/EAFfSnGl7II/2/0/1003w/canva-elegant-dark-woods-fantasy-photo-book-cover-vAt8PH1CmqQ.jpg" alt="${book.title}">
+            <div class="overlay">
+                <div class="copies">${book.copiesAvailable}</div>
+                <h3 class="title">${book.title}</h3>
+                <p class="author">${book.author}</p>
+                <p class="category">${book.category}</p>
+                <p class="year">${book.year}</p>
+                <button>Loan Book</button>
+            </div>
+        </div>
+
+        <div class="book-card">
+            <img src="${book.image}" alt="${book.title}">
+            <div class="overlay">
+                <div class="copies">${book.copiesAvailable}</div>
+                <h3 class="title">${book.title}</h3>
+                <p class="author">${book.author}</p>
+                <p class="category">${book.category}</p>
+                <p class="year">${book.year}</p>
+                <button>Loan Book</button>
+            </div>
+        </div> -->
+
+    </div>
+</body>
+</html>

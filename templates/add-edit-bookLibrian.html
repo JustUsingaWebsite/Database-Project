@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Library Management System - Add/Edit Book</title>
+    <link rel="stylesheet" href="../static/css/login.css">
+    <script src="../static/js/add-edit.js" defer></script>
+</head>
+<body>
+
+    <div class="book-section">
+        <form id="book-form" action="/save_book" method="post">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required><br>
+        
+            <label for="isbn_id">ISBN:</label>
+            <input type="text" id="isbn_id" name="isbn" required><br>
+        
+            <!-- Multi-add options for categories with remove functionality -->
+            <label for="categories">Categories:</label>
+            <div id="category-container">
+                <div class="category-item">
+                    <input type="text" name="categories[]" placeholder="Category" required>
+                    <button type="button" class="remove-category">Remove</button>
+                </div>
+            </div>
+            <button type="button" id="add-category">Add Another Category</button><br>
+        
+            <!-- Multi-add options for authors with remove functionality -->
+            <label for="authors">Authors:</label>
+            <div id="author-container">
+                <div class="author-item">
+                    <input type="text" name="authors[]" placeholder="Author Name" required>
+                    <button type="button" class="remove-author">Remove</button>
+                </div>
+            </div>
+            <button type="button" id="add-author">Add Another Author</button><br>
+        
+            <label for="yearofpublication">Year of Publication:</label>
+            <input type="date" id="yearofpublication" name="yearofpublication" required><br>
+        
+            <label for="copies">Copies:</label>
+            <input type="text" id="copies" name="copies" required><br>
+        
+            <button type="submit">Save</button>
+             <button type="reset">Cancel</button>
+        </form>
+    </div>
+    
+    <script>
+        // Function to add a new author input field with remove button
+        document.getElementById('add-author').addEventListener('click', function() {
+            var container = document.getElementById('author-container');
+            var authorItem = document.createElement('div');
+            authorItem.classList.add('author-item');
+            authorItem.innerHTML = `
+                <input type="text" name="authors[]" placeholder="Author Name" required>
+                <button type="button" class="remove-author">Remove</button>
+            `;
+            container.appendChild(authorItem);
+        });
+    
+        // Function to add a new category input field with remove button
+        document.getElementById('add-category').addEventListener('click', function() {
+            var container = document.getElementById('category-container');
+            var categoryItem = document.createElement('div');
+            categoryItem.classList.add('category-item');
+            categoryItem.innerHTML = `
+                <input type="text" name="categories[]" placeholder="Category" required>
+                <button type="button" class="remove-category">Remove</button>
+            `;
+            container.appendChild(categoryItem);
+        });
+    
+        // Event delegation for removing authors
+        document.getElementById('author-container').addEventListener('click', function(event) {
+            if (event.target.classList.contains('remove-author')) {
+                event.target.parentElement.remove();
+            }
+        });
+    
+        // Event delegation for removing categories
+        document.getElementById('category-container').addEventListener('click', function(event) {
+            if (event.target.classList.contains('remove-category')) {
+                event.target.parentElement.remove();
+            }
+        });
+    </script>
+
+    </div>
+
+    <div class="patron-section">
+        <h1>Add/Edit Patron</h1>
+    
+        <form action="/save_patron" method="post">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br>
+    
+            <label for="address">Address:</label>
+            <input type="text" id="address" name="address" required><br>
+    
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br>
+    
+            <label for="phone_number">Phone Number:</label>
+            <input type="text" id="phone_number" name="phone_number" required><br>
+    
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required><br>
+    
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br>
+    
+            <button type="submit">Save</button>
+            <button type="reset">Cancel</button>
+        </form>
+    </div>
+
+    <div class="loans-section">
+        <h1>Add/Edit Loans</h1>
+    
+        <form action="/save_loan" method="post">
+            <input type="hidden" name="loan_id" id="loan_id"> 
+            <label for="patron_id">Patron ID:</label>
+            <input type="text" id="patron_id" name="patron_id" required><br>
+    
+            <label for="isbn">ISBN:</label>
+            <input type="text" id="isbn" name="isbn" required><br>
+    
+            <label for="loan_date">Loan Date:</label>
+            <input type="date" id="loan_date" name="loan_date" required><br>
+    
+            <label for="return_date">Return Date:</label>
+            <input type="date" id="return_date" name="return_date"><br>
+    
+            <button type="submit">Save</button>
+            <button type="reset">Cancel</button>
+        </form>
+    </div>
+
+</body>
+</html>
+
+<!-- testing -->
