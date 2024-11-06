@@ -14,7 +14,7 @@ let cancel_buttons = document.querySelectorAll('button[type=reset]')
 for (let i = 0; i < cancel_buttons.length; i++) {
     cancel_buttons[i].addEventListener('click', function() {
         localStorage.removeItem('addEditData');
-        window.location.href = '/bookManagement';
+        window.location.href = `/${type}Management`;
     });
 }
 
@@ -38,10 +38,10 @@ switch(action){
                 typeBookEdit(id);
                 break;
             case 'patron':
-                typePatronEdit();
+                typePatronEdit(id);
                 break;
             case 'loan':
-                typeLoanEdit();
+                typeLoanEdit(id)
                 break;
         }
         break;
@@ -144,7 +144,7 @@ function typeLoanAdd(){
                returndate: returndate,
            }),
        })
-       
+
        if (response.ok) {
            alert("Book added successfully!");
            localStorage.removeItem('addEditData');
@@ -247,12 +247,76 @@ async function typeBookEdit(isbn) {
     }})
 }
 
+async function typeLoanEdit(isbn) {
+    // Display the loan editing section
+    document.querySelector('.loan-section').style.display = "block";
+    let loanData = null;
+
+    try {
+        // Fetch the loan data from the API
+        const response = await fetch('/api/data');
+        const data = await response.json();
+
+        // Find the loan with the matching ISBN (LoanID in your schema)
+        loanData = data.loans.find(loan => loan.LoanID === isbn);
+
+        if (loanData) {
+            // Populate the form fields with the fetched data
+            document.getElementById('patron_id').value = loanData.PatronID;
+            document.getElementById('isbn').value = loanData.ISBN;
+            document.getElementById('loan_date').value = loanData.LoanDate;
+            document.getElementById('return_date').value = loanData.ReturnDate;
+
+            // Store the loan ID for the update operation
+            document.getElementById('loan_id').value = loanData.LoanID;
+        } else {
+            alert("Loan not found. Please check the ISBN.");
+        }
+
+    } catch (error) {
+        console.error("Error loading loan data:", error);
+        alert("Failed to load loan data. Please try again.");
+    }
+
+    // Submit event listener for editing loan data
+    document.getElementById('loan-form').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    
+    const confirmLoan = confirm("Edit this loan? Proceed or Cancel");
+    if (!confirmLoan) return;
+
+    try {
+        const response = await fetch('/api/loan/edit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                loanid: document.getElementById('loan_id').value,
+                patron: document.getElementById('patron_id').value,
+                isbn: document.getElementById('isbn').value,
+                startdate: document.getElementById('loan_date').value,
+                returndate: document.getElementById('return_date').value,
+            }),
+        });
+
+        if (response.ok) {
+            alert("Loan edited successfully!");
+            window.location.href = '/loanManagement'; // Redirect to the loans page
+        } else {
+            const errorData = await response.json();
+            console.error('Error:', errorData);
+            alert("An error occurred while processing your request. Please try again.");
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert("An unexpected error occurred. Please try again.");
+    }
+});
+}
+
 
 
 function typePatronEdit(){
     document.querySelector('.patron-section').style.display = "block";
-}
-
-function typeLoanEdit(){
-    document.querySelector('.loan-section').style.display = "block";
 }

@@ -40,8 +40,8 @@ async function loadLoans() {
                 </div>
             `;
 
-            card.querySelector('.edit-btn').addEventListener('click', () => editBook(loan.ISBN));
-            card.querySelector('.delete-btn').addEventListener('click', () => deleteBook(loan.ISBN));
+            card.querySelector('.edit-btn').addEventListener('click', () => editLoan(loan.LoanID));
+            card.querySelector('.delete-btn').addEventListener('click', () => deleteLoan(loan.ISBN));
 
             // Append the card to the grid
             cardGrid.appendChild(card);
@@ -75,7 +75,7 @@ function editLoan(isbn) {
 }
 
 // Function to handle deleting a book
-async function deleteBook(isbn) {
+async function deleteLoan(isbn) {
     if (db == true){ return;}
     db = true;
 

@@ -122,6 +122,18 @@ def add_loan_route():
     response, status_code = asyncio.run(add_loan(patron, isbn, start_date, return_date))
     return response, status_code
 
+@app.route('/api/loan/edit', methods=['POST'])
+def update_loan_route():
+    data = request.json
+    loanid = data.get('loanid')
+    isbn = data.get('isbn')
+    patron = data.get('patron')
+    start_date = data.get('startdate')
+    return_date = data.get('returndate')
+    print(loanid, isbn, patron, start_date, return_date); return
+
+    return UpdateLoan(loanid, isbn, patron, start_date, return_date)
+
 
 
 
