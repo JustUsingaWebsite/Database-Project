@@ -4,8 +4,9 @@ import os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'python'))
 from auth import authenticate_user
 from GET import fetch_all_data
-from POST import loan_book, add_book
+from POST import loan_book, add_book, add_loan
 from UPDATE import UpdateLoan, UpdateBook
+import asyncio
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -107,6 +108,19 @@ def update_book_route():
     copies = data.get('copies')
 
     return UpdateBook(isbn, title, year, copies, authors, categories)
+
+
+@app.route('/api/loan/add', methods=['POST'])
+def add_loan_route():
+    data = request.json
+    isbn = data.get('isbn')
+    patron = data.get('patron')
+    start_date = data.get('startdate')
+    return_date = data.get('returndate')
+
+    # Use asyncio.run to call the async function
+    response, status_code = asyncio.run(add_loan(patron, isbn, start_date, return_date))
+    return response, status_code
 
 
 

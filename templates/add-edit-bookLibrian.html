@@ -91,7 +91,7 @@
     <div class="patron-section">
         <h1>Add/Edit Patron</h1>
     
-        <form action="/save_patron" method="post">
+        <form id="patron-form" action="/save_patron" method="post">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required><br>
     
@@ -115,10 +115,10 @@
         </form>
     </div>
 
-    <div class="loans-section">
+    <div class="loan-section">
         <h1>Add/Edit Loans</h1>
     
-        <form action="/save_loan" method="post">
+        <form id="loan-form" action="/save_loan" method="post">
             <input type="hidden" name="loan_id" id="loan_id"> 
             <label for="patron_id">Patron ID:</label>
             <input type="text" id="patron_id" name="patron_id" required><br>

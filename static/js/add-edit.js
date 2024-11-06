@@ -111,7 +111,49 @@ function typePatronAdd(){
 }
 
 function typeLoanAdd(){
-    document.querySelector('.loan-section').style.display = "block";
+    document.querySelector(".loan-section").style.display = "block";
+
+    document.getElementById('loan-form').addEventListener('submit', async function(event) {
+       event.preventDefault(); // Prevent the default form submission
+
+       // Variables to hold form data
+       var patron = document.getElementById('patron_id').value;
+       var isbn = document.getElementById('isbn').value;
+
+       //get all dates
+       var startdate = document.getElementById('loan_date').value;
+       var returndate = document.getElementById('return_date').value;
+
+       console.log('Patron:', patron);
+       console.log('ISBN:', isbn);
+       console.log('Date Borrowed:', startdate);
+       console.log('Date Due:', returndate);
+
+       const confirmLoan = confirm("Add this book? Proceed and Cancel");
+       if (!confirmLoan) return;
+
+       const response = await fetch('/api/loan/add', {
+           method: 'POST',
+           headers: {
+               'Content-Type': 'application/json',
+           },
+           body: JSON.stringify({
+               patron: patron,
+               isbn: isbn,
+               startdate: startdate,
+               returndate: returndate,
+           }),
+       })
+       
+       if (response.ok) {
+           alert("Book added successfully!");
+           localStorage.removeItem('addEditData');
+           window.location.href = '/loanManagement'; // Redirect to the books page
+       } else(error) => {
+           console.error('Error:', error);
+           alert("An error occurred while processing your request. Please try again.");
+       }
+   })
 }
 
 // Edit Section

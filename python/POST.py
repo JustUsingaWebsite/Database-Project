@@ -1,5 +1,6 @@
 import sqlite3
 from flask import jsonify
+from datetime import datetime
 
 def loan_book(patron_id, isbn, loan_date):
     conn = sqlite3.connect('./database/libraryDatabase.db')
@@ -31,9 +32,6 @@ def loan_book(patron_id, isbn, loan_date):
     else:
         conn.close()
         return jsonify({"message": "No copies available!"}), 400
-    
-import sqlite3
-from flask import jsonify
 
 def add_book(isbn, title, authors, categories, year, copies):
     conn = sqlite3.connect('./database/libraryDatabase.db')
@@ -106,3 +104,48 @@ def add_book(isbn, title, authors, categories, year, copies):
     finally:
         conn.close()
 
+async def add_loan(patronid, isbn, startdate, returndate=None):
+
+    # Validate input data
+    if not patronid or not isbn or not startdate:
+        return jsonify({'error': 'Invalid input data'}), 400
+    
+    conn = None
+    try:
+        # Connect to the database
+        conn = sqlite3.connect('./database/libraryDatabase.db')
+        c = conn.cursor()
+
+        # Validate that the book and patron exist before adding the loan
+        c.execute("SELECT 1 FROM Patrons WHERE PatronID = ?", (patronid,))
+        print("check 1")
+        if not c.fetchone():
+            return jsonify({'error': 'Invalid PatronID'}), 400
+
+        c.execute("SELECT 1 FROM Books WHERE ISBN = ?", (isbn,))
+        print("check 2")
+        if not c.fetchone():
+            return jsonify({'error': 'Invalid ISBN'}), 400
+
+        # Insert loan entry
+        c.execute("""
+            INSERT INTO Loans (PatronID, ISBN, LoanDate, ReturnDate)
+            VALUES (?, ?, ?, ?)
+        """, (patronid, isbn, startdate, returndate))
+        print("check 3")
+
+        # Commit the transaction
+        conn.commit()
+
+        return jsonify({'message': 'Loan added successfully'}), 201
+
+    except sqlite3.Error as e:
+        # Rollback in case of error
+        if conn:
+            conn.rollback()
+        return jsonify({'error': str(e)}), 500
+
+    finally:
+        # Close the connection
+        if conn:
+            conn.close()
