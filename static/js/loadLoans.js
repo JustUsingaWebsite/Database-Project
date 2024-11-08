@@ -3,21 +3,12 @@ async function loadLoans() {
         // Fetch the session to get the logged-in user's username
         const sessionResponse = await fetch('/api/session');
         const sessionData = await sessionResponse.json();
-        const username = sessionData.username;
 
         // Fetch all data including patrons and loans
         const dataResponse = await fetch('/api/data');
         const data = await dataResponse.json();
 
-        // Find the patron by username
-        const patron = data.patrons.find(p => p.Username === username);
-        if (!patron) {
-            alert("Patron not found! Please log in again.");
-            return;
-        }
-
-        const patronID = patron['PatronID'];
-
+        const patronID = sessionData['id']
         // Filter loans that belong to the logged-in patron
         const userLoans = data.loans.filter(loan => loan.PatronID === patronID);
 
@@ -29,6 +20,7 @@ async function loadLoans() {
         userLoans.forEach(loan => {
             const card = document.createElement('div');
             card.classList.add('book-card');
+            card.setAttribute('loan-id', loan.LoanID)
 
             const book = data.books.find(b => b.ISBN === loan.ISBN);
             const title = book ? book.Title : 'Unknown Title';
@@ -70,7 +62,8 @@ async function loadLoans() {
         document.querySelectorAll('.return-button').forEach(button => {
             button.addEventListener('click', function() {
                 const isbn = this.closest('.book-card').querySelector('.title').textContent.split('ISBN: ')[1];
-                returnBook(isbn);
+                const LoanID = this.closest('.book-card').getAttribute('loan-id');
+                returnBook(isbn, LoanID);
             });
         });
         

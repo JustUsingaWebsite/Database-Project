@@ -1,32 +1,69 @@
 from flask import jsonify
 import sqlite3
+#to do list
+# make the whole thing universal that whatever paramater is provided is what will be updated
+#if not provided then not updated
 
-def UpdateLoan(isbn, returndate, patronid=None, loandate=None):
+from flask import jsonify
+import sqlite3
+
+def UpdateLoan(loanid, patronid=None, isbn=None, loandate=None, returndate=None):
     conn = None
     try:
         conn = sqlite3.connect('./database/libraryDatabase.db')
         c = conn.cursor()
 
-        # First, update the Loans table
-        query = "UPDATE Loans SET ReturnDate = ? WHERE ISBN = ? AND (ReturnDate IS NULL OR ReturnDate = '')"
-        params = [returndate, isbn]
+        # Verify loan exists
+        c.execute("SELECT ISBN, ReturnDate FROM Loans WHERE LoanID = ?", (loanid,))
+        loan_data = c.fetchone()
+        if not loan_data:
+            return jsonify({'message': 'Loan not found'}), 404
+
+        current_isbn, current_returndate = loan_data
+
+        # Track changes for conditional updates
+        updates = []
+        params = []
+
+        # Update PatronID if provided
+        if patronid is not None:
+            updates.append("PatronID = ?")
+            params.append(patronid)
+
+        # Update LoanDate if provided
+        if loandate is not None:
+            updates.append("LoanDate = ?")
+            params.append(loandate)
+
+        # Update ISBN if provided
+        if isbn is not None and isbn != current_isbn:
+            # Update copies for current ISBN
+            c.execute("UPDATE Books SET CopiesAvailable = CopiesAvailable + 1 WHERE ISBN = ?", (current_isbn,))
+            # Update copies for new ISBN
+            c.execute("UPDATE Books SET CopiesAvailable = CopiesAvailable - 1 WHERE ISBN = ?", (isbn,))
+            updates.append("ISBN = ?")
+            params.append(isbn)
+
+        # Update ReturnDate if provided
+        if returndate is not None:
+            if not current_returndate and returndate:  # Returning a previously loaned book
+                c.execute("UPDATE Books SET CopiesAvailable = CopiesAvailable + 1 WHERE ISBN = ?", (isbn or current_isbn,))
+            elif current_returndate and not returndate:  # Re-loaning a returned book
+                c.execute("UPDATE Books SET CopiesAvailable = CopiesAvailable - 1 WHERE ISBN = ?", (isbn or current_isbn,))
+            updates.append("ReturnDate = ?")
+            params.append(returndate)
+
+        # If only loanID is provided, return failure
+        if not updates:
+            return jsonify({'message': 'No updates provided'}), 400
+
+        # Apply updates to Loans table
+        params.append(loanid)
+        query = f"UPDATE Loans SET {', '.join(updates)} WHERE LoanID = ?"
         c.execute(query, params)
-        
-        loans_updated = c.rowcount
 
-        if loans_updated == 0:
-            conn.close()
-            return jsonify({'message': 'No active loan found for the given ISBN'}), 404
-
-        # If Loans update was successful, update the Books table
-        c.execute("""
-            UPDATE Books 
-            SET CopiesAvailable = CopiesAvailable + 1 
-            WHERE ISBN = ?""", (isbn,))
-        
         conn.commit()
-        
-        return jsonify({'message': 'Book loan updated successfully'})
+        return jsonify({'message': 'Loan updated successfully'})
 
     except sqlite3.Error as e:
         if conn:
@@ -35,6 +72,7 @@ def UpdateLoan(isbn, returndate, patronid=None, loandate=None):
     finally:
         if conn:
             conn.close()
+
 
 def UpdateBook(isbn: str, title=None, year=None, copies=None, authors=None, categories=None):
     if not isbn:

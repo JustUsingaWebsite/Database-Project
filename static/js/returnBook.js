@@ -1,5 +1,5 @@
 // Function to handle book return
-async function returnBook(isbn) {
+async function returnBook(isbn, loanid) {
     try {
 
         const confirmLoan = confirm("Return this book? Proceed and Cancel");
@@ -11,7 +11,7 @@ async function returnBook(isbn) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ isbn, date: new Date().toISOString().split('T')[0] })
+            body: JSON.stringify({ isbn, date: new Date().toISOString().split('T')[0], loanid })
         });
         
         if (response.ok) {

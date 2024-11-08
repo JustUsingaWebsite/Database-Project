@@ -82,8 +82,9 @@ def return_book_route():
     data = request.json
     isbn = data.get('isbn')
     return_date = data.get('date')
+    Loanid = data.get('loanid')
 
-    return UpdateLoan(isbn, return_date)
+    return UpdateLoan(Loanid, session['id'], None, None, return_date)
 
 @app.route('/api/book/add', methods=['POST'])
 def add_book_route():
@@ -130,9 +131,9 @@ def update_loan_route():
     patron = data.get('patron')
     start_date = data.get('startdate')
     return_date = data.get('returndate')
-    print(loanid, isbn, patron, start_date, return_date); return
+    print(loanid, isbn, patron, start_date, return_date)
 
-    return UpdateLoan(loanid, isbn, patron, start_date, return_date)
+    return UpdateLoan(loanid, patron, isbn, start_date, return_date)
 
 
 
@@ -218,3 +219,4 @@ def unauthorized(e):
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
+    #app.run(debug=True)
