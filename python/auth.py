@@ -3,6 +3,9 @@ import sqlite3
 def authenticate_user(username, password):
     conn = sqlite3.connect('./database/libraryDatabase.db')
     cursor = conn.cursor()
+    user = None
+    role = None
+    userid = None
     # Adjust the query to fetch the user's role along with other user details
     cursor.execute("""
         SELECT * FROM Patrons 

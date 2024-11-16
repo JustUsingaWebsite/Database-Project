@@ -1,6 +1,6 @@
 import sqlite3
 from flask import jsonify
-from datetime import datetime
+from werkzeug.security import generate_password_hash
 
 def loan_book(patron_id, isbn, loan_date):
     conn = sqlite3.connect('./database/libraryDatabase.db')
@@ -147,5 +147,40 @@ async def add_loan(patronid, isbn, startdate, returndate=None):
 
     finally:
         # Close the connection
+        if conn:
+            conn.close()
+
+def add_patron(name, email, phone, address, username, password, role_id=1):
+    try:
+        # Connect to the database
+        conn = sqlite3.connect('./database/libraryDatabase.db')
+        c = conn.cursor()
+
+        # Hash the password for security
+        # hashed_password = generate_password_hash(password)
+
+        # Insert the new patron into the Patrons table
+        query = """
+            INSERT INTO Patrons (Name, Address, PhoneNumber, Email, Username, Password, RoleID)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        """
+        params = (name, address, phone, email, username, password, role_id)
+
+        c.execute(query, params)
+        
+        # Commit the transaction
+        conn.commit()
+
+        return jsonify({'message': 'Patron added successfully'}), 201
+
+    except sqlite3.IntegrityError as e:
+        # Handle unique constraint violation, such as duplicate username or email
+        return jsonify({'error': 'Patron already exists or duplicate entry found'}), 400
+
+    except sqlite3.Error as e:
+        # Handle other database errors
+        return jsonify({'error': str(e)}), 500
+
+    finally:
         if conn:
             conn.close()

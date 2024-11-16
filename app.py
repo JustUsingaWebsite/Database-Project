@@ -4,8 +4,9 @@ import os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'python'))
 from auth import authenticate_user
 from GET import fetch_all_data
-from POST import loan_book, add_book, add_loan
-from UPDATE import UpdateLoan, UpdateBook
+from POST import loan_book, add_book, add_loan, add_patron
+from UPDATE import UpdateLoan, UpdateBook, UpdatePatron
+from DELETE import Delete
 import asyncio
 
 app = Flask(__name__)
@@ -80,11 +81,11 @@ def loan_book_route():
 @app.route('/api/returnbook', methods=['POST'])
 def return_book_route():
     data = request.json
-    isbn = data.get('isbn')
+    #isbn = data.get('isbn')
     return_date = data.get('date')
     Loanid = data.get('loanid')
 
-    return UpdateLoan(Loanid, session['id'], None, None, return_date)
+    return UpdateLoan(Loanid, None, None, None, return_date)
 
 @app.route('/api/book/add', methods=['POST'])
 def add_book_route():
@@ -135,7 +136,59 @@ def update_loan_route():
 
     return UpdateLoan(loanid, patron, isbn, start_date, return_date)
 
+@app.route('/api/patron/add', methods=['POST'])
+def add_patron_route():
+    data = request.json
+    name = data.get('name')
+    email = data.get('email')
+    phone = data.get('phone')
+    address = data.get('address')
+    username = data.get('username')
+    password = data.get('password')
+    role_id = data.get('role')
 
+    return add_patron(name, email, phone, address, username, password, role_id)
+
+@app.route('/api/patron/edit', methods=['POST'])
+def edit_patron_route():
+    data = request.json
+    patronid = data.get('Patronid')
+    name = data.get('name')
+    email = data.get('email')
+    phone = data.get('phone')
+    address = data.get('address')
+    username = data.get('username')
+    password = data.get('password')
+    role_id = data.get('role')
+
+    if not username and not password:
+        if not session['role'] == 'admin':
+            return jsonify({'error': 'You are not authorized to edit this patron'}), 403
+
+    return UpdatePatron(patronid, name, email, phone, address, username, password, role_id)
+
+# DELETION section
+
+@app.route('/api/delete', methods=['DELETE'])
+def delete_entry():
+    entry_type = request.json.get('type')
+    entry_id = request.json.get('isbn')
+
+    if not entry_type or not entry_id:
+        return jsonify({'error': 'Type and ID are required parameters'}), 400
+
+    # Check role-based permissions
+    user_role = session.get('role')
+    if user_role not in ['librarian', 'admin']:
+        return jsonify({'error': 'Unauthorized: Insufficient privileges'}), 403
+
+    # Librarian cannot delete a patron
+    if user_role == 'librarian' and entry_type == 'patron':
+        return jsonify({'error': 'Unauthorized: Librarian level too low to delete patrons'}), 403
+
+
+    result, status = Delete(entry_type, entry_id)
+    return result, status
 
 
 # PATRON ROUTING SECTION
@@ -211,11 +264,13 @@ def patron_management():
 
 
 
-# Error handler section test changes
+# Error handler section
 
 @app.errorhandler(403)
 def unauthorized(e):
     return render_template('error.html', message="You are not authorized to view this page"), 403
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

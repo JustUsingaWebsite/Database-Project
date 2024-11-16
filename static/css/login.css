@@ -39,3 +39,16 @@ button {
 .loan-section{
     display: none;
 }
+
+/* Styling for radio buttons to appear in a line */
+#role {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+    gap: 10px; /* Adds space between the buttons */
+}
+
+#role label {
+    display: inline-flex;
+    align-items: center;
+}

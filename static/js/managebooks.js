@@ -66,18 +66,21 @@ async function deleteBook(isbn) {
     // Implement your delete functionality here, using the isbn
     if (!confirm("Are you sure you want to delete this book?")) {return;}
         
-    const response = await fetch('/api/book/delete', {
-    method: 'POST',
+    const response = await fetch('/api/delete', {
+    method: 'DELETE',
     headers: {
         'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ isbn }),});
+    body: JSON.stringify({ type: 'book', isbn: isbn }),});
 
     if (response.ok) {
         db = false;
         location.reload();
     } else {
+        const errorData = await response.json();
+        alert(errorData.error || 'Failed to delete book');
         console.error('Failed to delete book');
+        location.reload();
     }
 }
 

@@ -4,9 +4,6 @@ import sqlite3
 # make the whole thing universal that whatever paramater is provided is what will be updated
 #if not provided then not updated
 
-from flask import jsonify
-import sqlite3
-
 def UpdateLoan(loanid, patronid=None, isbn=None, loandate=None, returndate=None):
     conn = None
     try:
@@ -122,6 +119,73 @@ def UpdateBook(isbn: str, title=None, year=None, copies=None, authors=None, cate
             conn.rollback()
         print(f"SQLite error: {str(e)}")
         return jsonify({'error': str(e)}), 500
+    finally:
+        if conn:
+            conn.close()
+
+
+def UpdatePatron(patronid: str, name=None, email=None, phone=None, address=None, username=None, password=None, role_id=None):
+    if not patronid:
+        return jsonify({'error': 'PatronID is required for updating a patron'}), 400
+
+    # Create the base query
+    query = "UPDATE Patrons SET "
+    updates = []
+    params = []
+
+    # Add each non-empty parameter to the query and params list
+    if name:
+        updates.append("Name = ?")
+        params.append(name)
+    if email:
+        updates.append("Email = ?")
+        params.append(email)
+    if phone:
+        updates.append("PhoneNumber = ?")
+        params.append(phone)
+    if address:
+        updates.append("Address = ?")
+        params.append(address)
+    if username:
+        updates.append("Username = ?")
+        params.append(username)
+    if password:
+        #hashed_password = generate_password_hash(password)
+        updates.append("Password = ?")
+        params.append(password)
+    if role_id:
+        updates.append("RoleID = ?")
+        params.append(role_id)
+
+    # If no updates are provided, return an error
+    if not updates:
+        return jsonify({'error': 'No valid fields provided for update'}), 400
+
+    # Finalize the query
+    query += ", ".join(updates) + " WHERE PatronID = ?"
+    params.append(patronid)
+
+    try:
+        # Connect to the database
+        conn = sqlite3.connect('./database/libraryDatabase.db')
+        c = conn.cursor()
+
+        # Execute the query
+        c.execute(query, params)
+
+        # Commit the changes
+        conn.commit()
+
+        if c.rowcount == 0:
+            return jsonify({'error': 'No patron found with the given PatronID'}), 404
+
+        return jsonify({'message': 'Patron updated successfully'}), 200
+
+    except sqlite3.Error as e:
+        if conn:
+            conn.rollback()
+        return jsonify({'error': str(e)}), 500
+
     finally:
         if conn:
             conn.close()

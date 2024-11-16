@@ -41,7 +41,7 @@ async function loadLoans() {
             `;
 
             card.querySelector('.edit-btn').addEventListener('click', () => editLoan(loan.LoanID));
-            card.querySelector('.delete-btn').addEventListener('click', () => deleteLoan(loan.ISBN));
+            card.querySelector('.delete-btn').addEventListener('click', () => deleteLoan(loan.LoanID));
 
             // Append the card to the grid
             cardGrid.appendChild(card);
@@ -79,22 +79,25 @@ async function deleteLoan(isbn) {
     if (db == true){ return;}
     db = true;
 
-    console.log('Delete book with ISBN:', isbn);
+    console.log('Delete loan with loanid:', isbn);
     // Implement your delete functionality here, using the isbn
-    if (!confirm("Are you sure you want to delete this book?")) {return;}
+    if (!confirm("Are you sure you want to delete this loan?")) {return;}
         
-    const response = await fetch('/api/book/delete', {
-    method: 'POST',
+    const response = await fetch('/api/delete', {
+    method: 'DELETE',
     headers: {
         'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ isbn }),});
+    body: JSON.stringify({ type: 'loan', isbn: isbn }),});
 
     if (response.ok) {
         db = false;
         location.reload();
     } else {
-        console.error('Failed to delete book');
+        const errorData = await response.json();
+        alert(errorData.error || 'Failed to delete loan');
+        console.error('Failed to delete loan');
+        location.reload();
     }
 }
 

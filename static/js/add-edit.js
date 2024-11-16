@@ -108,6 +108,66 @@ switch(action){
 
 function typePatronAdd(){
     document.querySelector('.patron-section').style.display = "block";
+    document.getElementById('patron-form').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Variables to hold form data
+        var name = document.getElementById('name').value;
+        var email = document.getElementById('email').value;
+        var phone = document.getElementById('phone_number').value;
+        var address = document.getElementById('address').value;
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+        var role = document.querySelector('input[name="role"]:checked').value;
+
+
+        console.log('Name:', name);
+        console.log('Email:', email);
+        console.log('Phone:', phone);
+        console.log('Address:', address);
+        console.log('Username:', username);
+        console.log('Password:', password);
+        console.log('Role:', role);
+
+        const confirmLoan = confirm("Add this patron? Proceed and Cancel");
+        if (!confirmLoan) return;
+
+        switch (role.toLowerCase()) {
+            case 'patron':
+                role = 3;
+                break;
+            case 'librarian':
+                role = 2;
+                break;
+            case 'admin':
+                role = 1;
+                break;
+        }
+        
+        const response = await fetch('/api/patron/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                phone: phone,
+                address: address,
+                username: username,
+                password: password,
+                role: role
+            }),
+        })
+        if (response.ok) {
+            alert("Patron added successfully!");
+            localStorage.removeItem('addEditData');
+            window.location.href = '/patronManagement'; // Redirect to the books page
+        } else(error) => {
+            console.error('Error:', error);
+            alert("An error occurred while processing your request. Please try again.");
+        }
+    })
 }
 
 function typeLoanAdd(){
@@ -315,8 +375,102 @@ async function typeLoanEdit(isbn) {
 });
 }
 
-
-
-function typePatronEdit(){
+async function typePatronEdit(isbn){
     document.querySelector('.patron-section').style.display = "block";
+
+    let PatronData = null;
+
+    try {
+        // Fetch the loan data from the API
+        const response = await fetch('/api/data');
+        const data = await response.json();
+
+        // Find the loan with the matching ISBN (LoanID in your schema)
+        PatronData = data.patrons.find(patron => patron.PatronID === isbn);
+
+        if (PatronData) {
+            // Populate the form fields with the fetched data
+            document.getElementById('name').placeholder = PatronData.Name;
+            document.getElementById('email').placeholder = PatronData.Email;
+            document.getElementById('phone_number').placeholder = PatronData.PhoneNumber;
+            document.getElementById('address').placeholder = PatronData.Address;
+            document.getElementById('username').placeholder = PatronData.Username;
+            document.getElementById('password').placeholder = PatronData.Password;
+            
+            
+            switch(PatronData.RoleID){
+                case 1:
+                    document.querySelector("input[value='admin']").checked = true
+                    break;
+                case 2:
+                    document.querySelector("input[value='librarian']").checked = true
+                    break;
+                case 3:
+                    document.querySelector("input[value='patron']").checked = true
+                    break;
+            }
+
+            // Store the loan ID for the update operation
+            document.getElementById('patronid').value = PatronData.PatronID;
+        } else {
+            alert("Loan not found. Please check the ISBN.");
+        }
+
+    } catch (error) {
+        console.error("Error loading loan data:", error);
+        alert("Failed to load loan data. Please try again.");
+    }
+
+    // Submit event listener for editing loan data
+    document.getElementById('patron-form').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    
+    const confirmLoan = confirm("Edit this loan? Proceed or Cancel");
+    if (!confirmLoan) return;
+
+    var role = document.querySelector('input[name="role"]:checked').value;
+
+    switch (role.toLowerCase()) {
+        case 'patron':
+            role = 3;
+            break;
+        case 'librarian':
+            role = 2;
+            break;
+        case 'admin':
+            role = 1;
+            break;
+    }
+
+    try {
+        const response = await fetch('/api/patron/edit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+            Patronid : document.getElementById('patronid').value,
+            name : document.getElementById('name').value,
+            email : document.getElementById('email').value,
+            phone : document.getElementById('phone_number').value,
+            address : document.getElementById('address').value,
+            username : document.getElementById('username').value,
+            password : document.getElementById('password').value,
+            role : role
+            }),
+        });
+
+        if (response.ok) {
+            alert("Loan edited successfully!");
+            window.location.href = '/patronManagement'; // Redirect to the loans page
+        } else {
+            const errorData = await response.json();
+            console.error('Error:', errorData);
+            alert("An error occurred while processing your request. Please try again.");
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert("An unexpected error occurred. Please try again.");
+    }
+});
 }
