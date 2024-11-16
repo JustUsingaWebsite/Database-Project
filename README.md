@@ -14,7 +14,7 @@ flask
 asyncio
 ```
 
-you can either install using winget or download the [commandline binaries](https://www.sqlite.org/download.html) for your os
+you can either install using winget or download the [commandline binaries](https://www.sqlite.org/download.html) for your os and add it to your path(recommended) if yk what ur doing
 ```
 winget install sqlite
 ```
