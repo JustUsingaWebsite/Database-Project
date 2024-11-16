@@ -4,6 +4,7 @@ To quick run the application makes line `280` and `281` readable by removing the
 
 # Set Up
 - `download python ` <br>
+- `SQLITE`
 - `to see the images you will need a internet connection`
 <br>
 
