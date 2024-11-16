@@ -1,8 +1,8 @@
-# Intro
+# <ins>Intro</ins>
 This is a basic library system to demonstrate most if not all topics on <ins> **Intro to Databases**</ins>. Aslo features some topics from **Web Dev**, and **GUI**.
 To quick run the application makes line `280` and `281` readable by removing the '#' and adding one to line `279`.
 
-# Set Up
+# <ins>Set Up</ins>
 - `download python ` <br>
 - `SQLITE`
 - `to see the images you will need a internet connection`
@@ -25,10 +25,10 @@ sqlite --version
 > [!NOTE]
 > asyncio might not be used in the future :no_mouth:.
 
-# Usage 
+# <ins>Usage</ins> 
 
-## Patron
-### Loan Books
+## <ins>Patron</ins>
+### <ins>Loan Books</ins>
 as a patron you can loan as many books as you need.
 
 > [!TIP]
@@ -43,7 +43,7 @@ as a patron you can loan as many books as you need.
 [Loan Books [code source]](static/js/loadBooks.js)
 [Loans [code source] ](static/js/loadLoans.js)
 
-### Return Books
+### <ins>Return Books</ins>
 as a patron you can also return a book when you're finished.
 
 > [!TIP]
@@ -54,7 +54,7 @@ as a patron you can also return a book when you're finished.
 
 [Return book [code source]](static/js/returnBook.js)
 
-## Librarian
+## <ins>Librarian </ins>
 
 `Librarian [code source]`
 - [for books](static/js/managebooks.js)
@@ -62,28 +62,28 @@ as a patron you can also return a book when you're finished.
 - [for patrons](static/js/managePatrons.js)
 
 
-### Add Books
+### <ins>Add Books</ins>
 > [!NOTE]
 > Simple enough you can create a new book
-### Edit Books
+### <ins>Edit Books</ins>
 > [!NOTE]
 > Simple enough you can edit a books a title, year of publication, authors, categories, and copies
-### Add Loans
+### <ins>Add Loans</ins>
 > [!NOTE]
 > Simple enough you can create a loan
 
 > [!IMPORTANT]
 >will appear in the loans tab of the user created for
-### Edit Loans
+### <ins>Edit Loans</ins>
 > [!NOTE]
 > Simple enough you can edit a loans owner, book borrowed, loandate and returndate
-### Add Patrons
+### <ins>Add Patrons</ins>
 > [!NOTE]
 > Simple enough you can create a patron
-### Edit Patrons
+### <ins>Edit Patrons</ins>
 > [!NOTE]
 > Simple enough you can edit a patrons name or address or phone number or email or username or password (*not hashed*) or role
-## Admin
+## <ins>Admin</ins>
 `can do all the below:`
 - [add](#add-books)
 - [edit](#edit-books)
@@ -97,7 +97,7 @@ admin
 ```
 
 
-# Theory Used
+# <ins>Theory Used</ins>
 `Introduction to Databases`
 
 - [x] Create
@@ -130,9 +130,9 @@ Triggers
 
 
 
-# Problems
+# <ins>Problems</ins>
 
-### Deletion
+### <ins>Deletion</ins>
 So I did add deletion which both librarian and admin can use but mainly admin.
 
 But the problem is you would usually peek data in a database rather than delete it `unless a user wants his/her data removed.`
@@ -143,7 +143,7 @@ But the problem is you would usually peek data in a database rather than delete 
 > [!CAUTION]
 > If you an admin delete your own account you will be logged out.
 
-### Security
+### <ins>Security</ins>
 
 So security isn't the best here I mainly strived to get data accessable as possible that way I don't have to worry about debugging security and only implementations.
 
