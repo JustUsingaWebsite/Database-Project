@@ -21,7 +21,6 @@ def Delete(entry_type, entry_id):
 
         elif entry_type == 'loan':
             # Delete a specific loan
-            c.execute("UPDATE Books SET CopiesAvailable = CopiesAvailable + 1 WHERE ISBN = (SELECT ISBN FROM Loans WHERE LoanID = ?)", (entry_id, )) 
             c.execute("DELETE FROM Loans WHERE LoanID = ?", (entry_id,))
             
 
