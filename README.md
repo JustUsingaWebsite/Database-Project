@@ -27,7 +27,7 @@ as a patron you can loan as many books as you need.
 > [!IMPORTANT]
 > When loaning a book the book's ***copies*** decrease as it is now in your possesion.
 
-> [!CAUTION]
+> [!WARNING]
 > Note you **cannot** loan 2 of the same books, only 1 at a time.
 
 [Loan Books [code source]](static/js/loadBooks.js)
