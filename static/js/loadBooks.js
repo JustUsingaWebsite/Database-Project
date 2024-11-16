@@ -50,5 +50,52 @@ async function loadBooks() {
     }
 }
 
-// Call loadBooks when the page loads
-window.onload = loadBooks;
+async function loadMostPopularBook() {
+    try {
+        // Fetch all data
+        const dataResponse = await fetch('/api/data');
+        const data = await dataResponse.json();
+
+        // Count loans per book
+        const loanCounts = data.loans.reduce((counts, loan) => {
+            counts[loan.ISBN] = (counts[loan.ISBN] || 0) + 1;
+            return counts;
+        }, {});
+
+        // Find the ISBN with the most loans
+        const mostPopularISBN = Object.keys(loanCounts).reduce((a, b) => loanCounts[a] > loanCounts[b] ? a : b);
+
+        // Find book details
+        const book = data.books.find(b => b.ISBN === mostPopularISBN);
+
+        if (!book) {
+            console.warn('No popular book found.');
+            return;
+        }
+
+        // Populate the most popular book card
+        const popularBookCard = document.querySelector('.popular-book-card');
+        const img = popularBookCard.querySelector('.popular-book-img');
+        const title = popularBookCard.querySelector('.popular-title');
+        const author = popularBookCard.querySelector('.popular-author');
+        const category = popularBookCard.querySelector('.popular-category');
+        const loans = popularBookCard.querySelector('.popular-loans');
+
+        img.src = book.image || 'https://via.placeholder.com/300x400?text=No+Image';
+        img.alt = book.Title;
+        title.textContent = `Title: ${book.Title}`;
+        author.textContent = `Author: ${book.Authors.join(', ')}`;
+        category.textContent = `Category: ${book.Categories.join(', ')}`;
+        loans.textContent = `Loans: ${loanCounts[mostPopularISBN]} times`;
+
+    } catch (error) {
+        console.error('Error loading most popular book:', error);
+    }
+}
+
+// Load the most popular book when the page loads
+window.onload = () => {
+    loadBooks(); // Existing function
+    loadMostPopularBook();
+};
+
