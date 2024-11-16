@@ -8,6 +8,8 @@ from POST import loan_book, add_book, add_loan, add_patron
 from UPDATE import UpdateLoan, UpdateBook, UpdatePatron
 from DELETE import Delete
 import asyncio
+import webbrowser
+from threading import Timer
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -270,8 +272,10 @@ def patron_management():
 def unauthorized(e):
     return render_template('error.html', message="You are not authorized to view this page"), 403
 
-
+def open_browser():
+    webbrowser.open("http://127.0.0.1:5000")
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
-    #app.run(debug=True)
+    #Timer(0.7, open_browser).start()
+    #app.run(port=5000)
