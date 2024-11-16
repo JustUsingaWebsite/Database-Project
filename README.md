@@ -13,6 +13,15 @@ To quick run the application makes line `280` and `281` readable by removing the
 flask
 asyncio
 ```
+
+you can either install using winget or download the [commandline binaries](https://www.sqlite.org/download.html) for your os
+```
+winget install sqlite
+```
+```
+sqlite --version
+```
+
 > [!NOTE]
 > asyncio might not be used in the future :no_mouth:.
 
