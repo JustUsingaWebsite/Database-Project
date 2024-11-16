@@ -139,4 +139,4 @@ So security isn't the best here I mainly strived to get data accessable as possi
 
 you can notice that your session data is free for you to see at [api/session](http://127.0.0.1:5000/api/session) or even all the data from the database in a json at [api/data](http://127.0.0.1:5000/api/data) :skull:.
 
-There are some other methods that I used are a little like using `LocalStorage` from the browser to hold `action`, `type`, and `id` of the user you want to perfrom that action and which type of action. [code source](static/js/add-edit.js)
+There are some other methods that I used are a little better like using `LocalStorage` from the browser to hold `action`, `type`, and `id` of the user you want to perfrom that action and which type of action. [code source](static/js/add-edit.js)
