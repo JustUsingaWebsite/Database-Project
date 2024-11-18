@@ -10,6 +10,8 @@
         <h1>Dashboard</h1>
         <nav>
             <ul>
+                <li><a href="{{ url_for('books') }}">Manage Books</a></li>
+                <li><a href="{{ url_for('loans') }}">Manage Books</a></li>
                 <li><a href="{{ url_for('book_management') }}">Manage Books</a></li>
                 <li><a href="{{ url_for('patron_management') }}">Manage Patrons</a></li>
                 <li><a href="{{ url_for('loan_management') }}">Manage Loans</a></li>
