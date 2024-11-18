@@ -57,6 +57,9 @@ async function loadLoans() {
 function editLoan(isbn) {
     if (db == true){ return;}
     db = true;
+    setTimeout(function() {
+        db = false;
+    }, 1000);
 
     const data = {
         action: 'edit',
@@ -69,15 +72,15 @@ function editLoan(isbn) {
 
     window.location.href = "/add_edit";
 
-    setTimeout(function() {
-        db = false;
-    }, 1000);
 }
 
 // Function to handle deleting a book
 async function deleteLoan(isbn) {
     if (db == true){ return;}
     db = true;
+    setTimeout(function() {
+        db = false;
+    }, 1000);
 
     console.log('Delete loan with loanid:', isbn);
     // Implement your delete functionality here, using the isbn
@@ -109,6 +112,9 @@ window.onload = loadLoans;
 var add_button = document.querySelector(".add-book-btn").addEventListener("click", function(){
     if (db == true){return;}
     db = true;
+    setTimeout(function() {
+        db = false;
+    }, 1000);
 
     // Define the data you want to store
     const data = {
@@ -122,9 +128,5 @@ var add_button = document.querySelector(".add-book-btn").addEventListener("click
 
     // Redirect to the add_edit page
     window.location.href = "/add_edit";
-
-    setTimeout(function() {
-        db = false;
-    }, 1000);
 });
 

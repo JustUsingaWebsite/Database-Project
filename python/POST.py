@@ -52,21 +52,37 @@ def add_book(isbn, title, authors, categories, year, copies):
 
         # Link authors to book
         for author in authors:
+            # Check if author exists
+            cursor.execute("SELECT AuthorID FROM Authors WHERE Name = ?", (author,))
+            author_id = cursor.fetchone()
+            if not author_id:
+                # Insert author if not exists
+                cursor.execute("INSERT INTO Authors (Name) VALUES (?)", (author,))
+                author_id = cursor.lastrowid
+            else:
+                author_id = author_id[0]
+
+            # Link author to book
             cursor.execute("""
-                INSERT INTO BookAuthors (ISBN, AuthorID)
-                VALUES (?, (
-                    SELECT AuthorID FROM Authors WHERE Name = ? LIMIT 1
-                ))
-            """, (isbn, author))
+                INSERT INTO BookAuthors (ISBN, AuthorID) VALUES (?, ?)
+            """, (isbn, author_id))
 
         # Link categories to book
         for category in categories:
+            # Check if category exists
+            cursor.execute("SELECT CategoryID FROM Categories WHERE Name = ?", (category,))
+            category_id = cursor.fetchone()
+            if not category_id:
+                # Insert category if not exists
+                cursor.execute("INSERT INTO Categories (Name) VALUES (?)", (category,))
+                category_id = cursor.lastrowid
+            else:
+                category_id = category_id[0]
+
+            # Link category to book
             cursor.execute("""
-                INSERT INTO BookCategories (ISBN, CategoryID)
-                VALUES (?, (
-                    SELECT CategoryID FROM Categories WHERE Name = ? LIMIT 1
-                ))
-            """, (isbn, category))
+                INSERT INTO BookCategories (ISBN, CategoryID) VALUES (?, ?)
+            """, (isbn, category_id))
 
         # Commit the transaction
         conn.commit()

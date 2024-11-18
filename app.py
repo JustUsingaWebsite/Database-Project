@@ -149,6 +149,9 @@ def add_patron_route():
     password = data.get('password')
     role_id = data.get('role')
 
+    if session['role'] != 'admin' and role_id == 1:
+        return jsonify({'error': 'You are not authorized to add patrons'}), 403
+
     return add_patron(name, email, phone, address, username, password, role_id)
 
 @app.route('/api/patron/edit', methods=['POST'])

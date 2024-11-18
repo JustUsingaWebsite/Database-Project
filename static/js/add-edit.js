@@ -101,7 +101,7 @@ switch(action){
             window.location.href = '/bookManagement'; // Redirect to the books page
         } else(error) => {
             console.error('Error:', error);
-            alert("An error occurred while processing your request. Please try again.");
+            alert(error || "An error occurred while processing your request. Please try again.");
         }
     })
 }
@@ -165,7 +165,7 @@ function typePatronAdd(){
             window.location.href = '/patronManagement'; // Redirect to the books page
         } else(error) => {
             console.error('Error:', error);
-            alert("An error occurred while processing your request. Please try again.");
+            alert(error || "An error occurred while processing your request. Please try again.");
         }
     })
 }
@@ -211,7 +211,7 @@ function typeLoanAdd(){
            window.location.href = '/loanManagement'; // Redirect to the books page
        } else(error) => {
            console.error('Error:', error);
-           alert("An error occurred while processing your request. Please try again.");
+           alert(error ||"An error occurred while processing your request. Please try again.");
        }
    })
 }
@@ -267,7 +267,7 @@ async function typeBookEdit(isbn) {
         }
     } catch (error) {
         console.error("Error loading book data:", error);
-        alert("Failed to load book data. Please try again.");
+        alert(error ||"Failed to load book data. Please try again.");
     }
 
     document.getElementById('book-form').addEventListener('submit', async function(event) {
@@ -370,7 +370,7 @@ async function typeLoanEdit(isbn) {
         }
     } catch (error) {
         console.error('Error:', error);
-        alert("An unexpected error occurred. Please try again.");
+        alert(error ||"An unexpected error occurred. Please try again.");
     }
 });
 }
@@ -470,7 +470,7 @@ async function typePatronEdit(isbn){
         }
     } catch (error) {
         console.error('Error:', error);
-        alert("An unexpected error occurred. Please try again.");
+        alert(error ||"An unexpected error occurred. Please try again.");
     }
 });
 }

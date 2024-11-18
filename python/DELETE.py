@@ -11,12 +11,10 @@ def Delete(entry_type, entry_id):
 
         if entry_type == 'book':
             # Check and delete loans associated with the book
-            c.execute("DELETE FROM Loans WHERE ISBN = ?", (entry_id,))
             c.execute("DELETE FROM Books WHERE ISBN = ?", (entry_id,))
 
         elif entry_type == 'patron':
             # Check and delete loans associated with the patron
-            c.execute("DELETE FROM Loans WHERE PatronID = ?", (entry_id,))
             c.execute("DELETE FROM Patrons WHERE PatronID = ?", (entry_id,))
 
         elif entry_type == 'loan':

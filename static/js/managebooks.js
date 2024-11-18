@@ -41,6 +41,10 @@ function editBook(isbn) {
     if (db == true){ return;}
     db = true;
 
+    setTimeout(function() {
+        db = false;
+    }, 1000);
+
     const data = {
         action: 'edit',
         type: 'book',
@@ -51,16 +55,16 @@ function editBook(isbn) {
     localStorage.setItem('addEditData', JSON.stringify(data));
 
     window.location.href = "/add_edit";
-
-    setTimeout(function() {
-        db = false;
-    }, 1000);
 }
 
 // Function to handle deleting a book
 async function deleteBook(isbn) {
     if (db == true){ return;}
     db = true;
+
+    setTimeout(function() {
+        db = false;
+    }, 1000);
 
     console.log('Delete book with ISBN:', isbn);
     // Implement your delete functionality here, using the isbn
@@ -93,6 +97,10 @@ var add_button = document.querySelector(".add-book-btn").addEventListener("click
     if (db == true){return;}
     db = true;
 
+    setTimeout(function() {
+        db = false;
+    }, 1000);
+
     // Define the data you want to store
     const data = {
         action: 'add',
@@ -105,9 +113,5 @@ var add_button = document.querySelector(".add-book-btn").addEventListener("click
 
     // Redirect to the add_edit page
     window.location.href = "/add_edit";
-
-    setTimeout(function() {
-        db = false;
-    }, 1000);
 });
 
