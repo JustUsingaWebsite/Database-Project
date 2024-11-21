@@ -150,6 +150,7 @@ def add_patron_route():
     role_id = data.get('role')
 
     if session['role'] != 'admin' and role_id == 1:
+        print(session['role'])
         return jsonify({'error': 'You are not authorized to add patrons'}), 403
 
     return add_patron(name, email, phone, address, username, password, role_id)
@@ -279,6 +280,6 @@ def open_browser():
     webbrowser.open("http://127.0.0.1:5000")
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
-    #Timer(0.7, open_browser).start()
-    #app.run(port=5000)
+    # app.run(debug=True, host='0.0.0.0')
+    Timer(0.7, open_browser).start()
+    app.run(port=5000)
